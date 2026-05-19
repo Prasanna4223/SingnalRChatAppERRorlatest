@@ -1,5 +1,5 @@
-﻿@{
-    ViewData["Title"] = "SignalR Chat Application";
+@{
+    ViewData["Title"] = "Chat & Video Call";
 }
 
 <!DOCTYPE html>
@@ -8,232 +8,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
-    <!-- Link to Bootstrap CSS for styling -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background-color: #f4f6f9;
-            font-family: Arial, sans-serif;
-        }
-
-        .chat-container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-        }
-
-        .chat-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .chat-input-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        #message {
-            flex-grow: 1;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        #sendmessage {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            font-size: 14px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-            #sendmessage:hover {
-                background-color: #0056b3;
-            }
-
-        #discussion {
-            list-style-type: none;
-            padding: 0;
-            max-height: 300px;
-            overflow-y: auto;
-            margin-top: 20px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-        }
-
-            #discussion li {
-                padding: 8px 10px;
-                margin-bottom: 10px;
-                border-radius: 5px;
-                background-color: #f1f1f1;
-                word-wrap: break-word;
-            }
-
-                #discussion li:nth-child(odd) {
-                    background-color: #e0e0e0;
-                }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .chat-footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .video-wrapper {
-            display: none; /* Hide initially */
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        video {
-            border-radius: 15px;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            width: 360px;
-            height: 240px;
-            object-fit: cover;
-            box-shadow: 0 0 10px rgba(0,0,0,0.4);
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            min-height: 150vh;
-            min-width:100vh;
-        /*     display: flex;
-            align-items: center;
-            justify-content: center;
-                    color: white;*/
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            padding: 4px;
-            text-align: center;
-            width: 90%;
-            max-width: 800px;
-        }
-
-        button {
-            padding: 12px 25px;
-            border-radius: 30px;
-            border: none;
-            background: #00c6ff;
-            background: linear-gradient(to right, #0072ff, #00c6ff);
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-            button:hover {
-                transform: scale(1.05);
-                box-shadow: 0 0 10px #00c6ff;
-            }
-    </style>
-    <style>
-        #incomingCallPopup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 280px;
-            background: #ffffff;
-            color: #000;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            z-index: 9999;
-            display: none;
-            text-align: center;
-            animation: slideUp 0.3s ease-out;
-            animation-fill-mode: both;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-
-        @@keyframes slideUp {
-            0% {
-                transform: translate(-50%, 100%);
-                opacity: 0;
-            }
-
-            100% {
-                transform: translate(-50%, 0);
-                opacity: 1;
-            }
-        }
-
-        #incomingCallPopup .btn-group {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        #incomingCallPopup button {
-            width: 100px;
-            padding: 10px;
-            border: none;
-            border-radius: 30px;
-            font-size: 14px;
-            color: white;
-            cursor: pointer;
-        }
-
-        #incomingCallPopup .accept {
-            background-color: #28a745;
-        }
-
-        #incomingCallPopup .reject {
-            background-color: #dc3545;
-        }
-    </style>
-
-
+    <link rel="stylesheet" href="~/css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 </head>
 <body>
-    <div style="display: flex; height: 100vh;">
-        <!-- Sidebar -->
-        <div style="width: 250px; background: #2c3e50; color: white; padding: 20px;">
-            <h3>👥 Active Users</h3>
-            <p style="font-size: 12px; color: #bdc3c7;">Click a user to call</p>
-            <ul id="activeUsersList" style="list-style: none; padding: 0;"></ul>
-        </div>
+    <!-- Username Entry Popup -->
+    <div class="username-popup" id="usernamePopup">
+        <h2>🎉 Welcome!</h2>
+        <p>Enter your name to get started</p>
+        <input type="text" id="displayname" placeholder="Your name" autofocus />
+        <br><br>
+        <button id="joinBtn">Join Now</button>
+    </div>
 
-        <!-- Main content -->
-        <div style="flex: 1; padding: 20px;">
-            <h2>📞 Video Call</h2>
-
-            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-                <video id="localVideo" autoplay muted playsinline
-                       style="width: 45%; border: 2px solid #1abc9c; border-radius: 10px; background: black;"></video>
-                <video id="remoteVideo" autoplay playsinline
-                       style="width: 45%; border: 2px solid #3498db; border-radius: 10px; background: black;"></video>
-            </div>
-
-            <button id="endCall" style="padding: 10px 20px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                End Call
-            </button>
+    <!-- Incoming Call Popup -->
+    <div class="incoming-call-popup" id="incomingCallPopup">
+        <h2>📞 Incoming Call</h2>
+        <div class="caller-name" id="callerName"></div>
+        <div class="call-info" id="callMediaInfo"></div>
+        <div class="popup-buttons">
+            <button class="accept-btn" id="acceptCallPopup">✅ Accept</button>
+            <button class="reject-btn" id="rejectCallPopup">❌ Decline</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-    <script src="~/js/call.js"></script>
+    <!-- Main Application -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>👥 Active Users</h3>
+            <ul id="activeUsersList"></ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Call Controls -->
+            <div class="call-controls">
+                <button id="endCall">📞 End Call</button>
+                <button id="toggleVideo">📹 Video On</button>
+                <button id="toggleAudio">🎤 Mic On</button>
+            </div>
+
+            <!-- Video Streams (hidden by default, shown during call) -->
+            <div class="video-container" style="display: none;">
+                <div class="video-box">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <span class="video-label">You</span>
+                </div>
+                <div class="video-box">
+                    <video id="remoteVideo" autoplay playsinline></video>
+                    <span class="video-label">Remote</span>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div class="chat-container">
+                <h3>💬 Messages</h3>
+                <div id="chatMessages"></div>
+                <div class="message-input-container">
+                    <input type="text" id="message" placeholder="Select a user, then type a message..." />
+                    <button id="sendmessage">Send</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="~/js/app.js"></script>
 </body>
-
 </html>
-

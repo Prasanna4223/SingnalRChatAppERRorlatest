@@ -37,3 +37,43 @@ C:\Users\DELL\OneDrive - TechSwing Solutions Pvt Ltd\Desktop\SignalRChatApplicat
 C:\Users\DELL\OneDrive - TechSwing Solutions Pvt Ltd\Desktop\SignalRChatApplication\obj\Release\net8.0\SignalRChatApplication.pdb
 C:\Users\DELL\OneDrive - TechSwing Solutions Pvt Ltd\Desktop\SignalRChatApplication\obj\Release\net8.0\SignalRChatApplication.genruntimeconfig.cache
 C:\Users\DELL\OneDrive - TechSwing Solutions Pvt Ltd\Desktop\SignalRChatApplication\obj\Release\net8.0\ref\SignalRChatApplication.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\appsettings.Development.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\appsettings.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\SignalRChatApplication.staticwebassets.runtime.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\SignalRChatApplication.staticwebassets.endpoints.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\SignalRChatApplication.exe
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\SignalRChatApplication.deps.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\SignalRChatApplication.runtimeconfig.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\SignalRChatApplication.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\SignalRChatApplication.pdb
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\Microsoft.AspNetCore.Connections.Abstractions.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\Microsoft.AspNetCore.SignalR.Common.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\Microsoft.Extensions.Features.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\bin\Release\net8.0\Microsoft.Extensions.Options.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\rpswa.dswa.cache.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.GeneratedMSBuildEditorConfig.editorconfig
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.AssemblyInfoInputs.cache
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.AssemblyInfo.cs
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.csproj.CoreCompileInputs.cache
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.MvcApplicationPartsAssemblyInfo.cache
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.RazorAssemblyInfo.cache
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.RazorAssemblyInfo.cs
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.sourcelink.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\rjimswa.dswa.cache.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\rjsmrazor.dswa.cache.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\rjsmcshtml.dswa.cache.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\scopedcss\bundle\SignalRChatApplication.styles.css
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\scopedcss\projectbundle\SignalRChatApplication.bundle.scp.css
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\staticwebassets.build.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\staticwebassets.build.json.cache
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\staticwebassets.development.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\staticwebassets.build.endpoints.json
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\swae.build.ex.cache
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\staticwebassets.upToDateCheck.txt
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRC.2E6BA3A6.Up2Date
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\refint\SignalRChatApplication.dll
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.pdb
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\SignalRChatApplication.genruntimeconfig.cache
+D:\softwares\PRASANNA\New folder\SingnalRChatAppERRorlatest\obj\Release\net8.0\ref\SignalRChatApplication.dll

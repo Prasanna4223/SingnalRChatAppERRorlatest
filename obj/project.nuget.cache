@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jzvu8lvUjQ8=",
+  "dgSpecHash": "AEUEAFWilp8=",
   "success": true,
-  "projectFilePath": "D:\\softwares\\PRASANNA\\Github_chatapp\\Old chat app\\SingnalRChatApp\\SignalRChatApplication.csproj",
+  "projectFilePath": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\8.0.7\\microsoft.aspnetcore.connections.abstractions.8.0.7.nupkg.sha512",
     "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.aspnetcore.signalr.common\\8.0.7\\microsoft.aspnetcore.signalr.common.8.0.7.nupkg.sha512",

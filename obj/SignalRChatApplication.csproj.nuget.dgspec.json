@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\softwares\\PRASANNA\\Github_chatapp\\Old chat app\\SingnalRChatApp\\SignalRChatApplication.csproj": {}
+    "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj": {}
   },
   "projects": {
-    "D:\\softwares\\PRASANNA\\Github_chatapp\\Old chat app\\SingnalRChatApp\\SignalRChatApplication.csproj": {
+    "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\softwares\\PRASANNA\\Github_chatapp\\Old chat app\\SingnalRChatApp\\SignalRChatApplication.csproj",
+        "projectUniqueName": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
         "projectName": "SignalRChatApplication",
-        "projectPath": "D:\\softwares\\PRASANNA\\Github_chatapp\\Old chat app\\SingnalRChatApp\\SignalRChatApplication.csproj",
+        "projectPath": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
         "packagesPath": "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\",
-        "outputPath": "D:\\softwares\\PRASANNA\\Github_chatapp\\Old chat app\\SingnalRChatApp\\obj\\",
+        "outputPath": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -30,6 +30,7 @@
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -44,10 +45,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.AspNetCore.SignalR.Common": {
@@ -74,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
