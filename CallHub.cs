@@ -4,7 +4,6 @@ namespace SignalRChatApplication
 {
     public class CallHub : Hub
     {
-        // Thread-safe: use ConcurrentDictionary in production, but for single-server this works
         private static readonly Dictionary<string, UserInfo> Users = new();
         private static readonly object _lock = new();
 
@@ -25,7 +24,30 @@ namespace SignalRChatApplication
 
             lock (_lock) { Users[Context.ConnectionId] = info; }
             await BroadcastUserList();
-            return Context.ConnectionId; // Return actual connection ID so client can identify itself
+            return Context.ConnectionId;
+        }
+
+        // ─── Explicit user list request (client calls after joining) ───
+        public async Task GetUserList()
+        {
+            List<object> userList;
+            lock (_lock)
+            {
+                userList = Users.Values
+                    .Where(u => u.IsOnline)
+                    .Select(u => new
+                    {
+                        id = u.ConnectionId,
+                        name = u.Name,
+                        isDoNotDisturb = u.IsDoNotDisturb,
+                        isInCall = u.IsInCall,
+                        isOnline = u.IsOnline
+                    })
+                    .Cast<object>()
+                    .ToList();
+            }
+
+            await Clients.Caller.SendAsync("UserListUpdated", userList);
         }
 
         // ─── Do Not Disturb ───
@@ -61,7 +83,6 @@ namespace SignalRChatApplication
         }
 
         // ─── Initiate Call (Send Offer) ───
-        // NOTE: Don't mark users as "in call" here — only after AcceptCall
         public async Task SendOffer(string receiverId, object offer, bool hasVideo, bool hasAudio)
         {
             if (offer == null) return;
@@ -69,11 +90,7 @@ namespace SignalRChatApplication
             UserInfo? caller, receiver;
             lock (_lock)
             {
-                if (!Users.TryGetValue(Context.ConnectionId, out caller))
-                {
-                    // caller session invalid, nothing to do
-                    return;
-                }
+                if (!Users.TryGetValue(Context.ConnectionId, out caller)) return;
                 if (!Users.TryGetValue(receiverId, out receiver))
                 {
                     Clients.Caller.SendAsync("CallRejected", "User not found").Wait();
@@ -93,7 +110,6 @@ namespace SignalRChatApplication
                 return;
             }
 
-            // Send incoming call notification — don't mark as busy yet
             await Clients.Client(receiverId).SendAsync("IncomingCall",
                 Context.ConnectionId, caller.Name, offer, hasVideo, hasAudio);
         }
@@ -199,7 +215,6 @@ namespace SignalRChatApplication
             {
                 if (Users.TryGetValue(Context.ConnectionId, out var user))
                 {
-                    // If user was in a call, free the peer
                     if (user.IsInCall && user.InCallWith != null)
                     {
                         peerToNotify = user.InCallWith;

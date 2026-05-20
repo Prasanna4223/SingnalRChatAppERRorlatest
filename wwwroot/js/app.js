@@ -1,11 +1,12 @@
 // ═══════════════════════════════════════════════════════
-//  SignalR Video Chat - app.js (complete rewrite)
+//  SignalR Video Chat - app.js
 // ═══════════════════════════════════════════════════════
 
 // ─── State ───
 let myId = null;
 let myName = "";
 let selectedUserId = null;
+let selectedUserName = "";
 let currentPeerId = null;
 let peerConnection = null;
 let localStream = null;
@@ -13,6 +14,13 @@ let localHasVideo = false;
 let localHasAudio = false;
 let isInCall = false;
 let pendingIceCandidates = [];
+
+// ─── Per-user chat history ───
+const chatHistories = new Map();
+
+// ─── Cached user list ───
+let latestUserList = [];
+
 // ─── SignalR Hub ───
 const hub = new signalR.HubConnectionBuilder()
     .withUrl("/callHub")
@@ -28,20 +36,59 @@ const userListEl = document.getElementById("activeUsersList");
 const endCallBtn = document.getElementById("endCall");
 const toggleVideoBtn = document.getElementById("toggleVideo");
 const toggleAudioBtn = document.getElementById("toggleAudio");
+const chatTargetName = document.getElementById("chatTargetName");
+
 remoteVideo.autoplay = true;
 remoteVideo.playsInline = true;
-
 localVideo.autoplay = true;
 localVideo.playsInline = true;
 localVideo.muted = true;
 
-// ─── ICE Configuration ───
+// ─── ICE Configuration (STUN + TURN for remote connectivity) ───
 const ICE_CONFIG = {
     iceServers: [
         { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" }
-    ]
+        { urls: "stun:stun1.l.google.com:19302" },
+        {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        }
+    ],
+    iceCandidatePoolSize: 10
 };
+
+// ═══════════════════════════════════════════════════════
+//  MOBILE SIDEBAR TOGGLE
+// ═══════════════════════════════════════════════════════
+
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const hamburgerBtn = document.getElementById("hamburgerBtn");
+const sidebarClose = document.getElementById("sidebarClose");
+
+function openSidebar() {
+    sidebar.classList.add("open");
+    sidebarOverlay.classList.add("show");
+}
+function closeSidebar() {
+    sidebar.classList.remove("open");
+    sidebarOverlay.classList.remove("show");
+}
+
+hamburgerBtn.onclick = openSidebar;
+sidebarClose.onclick = closeSidebar;
+sidebarOverlay.onclick = closeSidebar;
 
 // ═══════════════════════════════════════════════════════
 //  1. JOIN / REGISTRATION
@@ -53,10 +100,10 @@ dndToggle.className = "dnd-toggle";
 dndToggle.textContent = "🟢 Available";
 dndToggle.onclick = () => {
     const isOn = dndToggle.classList.toggle("on");
-    dndToggle.textContent = isOn ? "🔴 Do Not Disturb" : "🟢 Available";
+    dndToggle.textContent = isOn ? "🔴 DND" : "🟢 Available";
     hub.invoke("ToggleDnd", isOn);
 };
-document.querySelector(".sidebar").prepend(dndToggle);
+sidebar.querySelector(".sidebar-header").after(dndToggle);
 
 // Join button
 document.getElementById("joinBtn").onclick = async () => {
@@ -65,9 +112,16 @@ document.getElementById("joinBtn").onclick = async () => {
 
     try {
         await hub.start();
-        myId = await hub.invoke("Register", myName);
+        // Set myId BEFORE Register so UserListUpdated knows who "me" is
+        myId = hub.connectionId;
+        console.log("Connected, myId:", myId);
+
+        await hub.invoke("Register", myName);
         document.querySelector(".username-popup").style.display = "none";
-        console.log("Joined as:", myName, "| ID:", myId);
+        console.log("Registered as:", myName);
+
+        // Re-render cached list now that myId is set
+        if (latestUserList.length > 0) renderUserList(latestUserList);
     } catch (err) {
         console.error("Connection failed:", err);
         alert("Failed to connect: " + err.toString());
@@ -80,10 +134,16 @@ document.getElementById("displayname").addEventListener("keydown", (e) => {
 });
 
 // ═══════════════════════════════════════════════════════
-//  2. USER LIST (receives array of user objects)
+//  2. USER LIST
 // ═══════════════════════════════════════════════════════
 
 hub.on("UserListUpdated", (users) => {
+    console.log("UserListUpdated received, count:", users.length, "myId:", myId);
+    latestUserList = users;
+    renderUserList(users);
+});
+
+function renderUserList(users) {
     userListEl.innerHTML = "";
 
     users.forEach(user => {
@@ -95,23 +155,29 @@ hub.on("UserListUpdated", (users) => {
         if (user.isDoNotDisturb) statusIcons += " 🚫";
         if (user.isInCall) statusIcons += " 📞";
 
-        li.innerHTML = `<span class="user-name">${displayName}</span><span class="user-status">${statusIcons}</span>`;
+        // Unread badge
+        const history = chatHistories.get(user.id);
+        const unread = history ? history.filter(m => m.unread).length : 0;
+
+        li.innerHTML = `<span class="user-name">${displayName}</span>` +
+            (unread > 0 ? `<span class="unread-badge">${unread}</span>` : '') +
+            `<span class="user-status">${statusIcons}</span>`;
 
         if (user.isInCall) li.classList.add("user-busy");
 
-        // Identify self
         if (user.id === myId) {
             li.classList.add("current-user");
             li.innerHTML += ` <span class="badge">(You)</span>`;
         } else {
-            // Click to select
+            if (user.id === selectedUserId) li.classList.add("selected");
+
             li.onclick = () => {
                 document.querySelectorAll("#activeUsersList li").forEach(x => x.classList.remove("selected"));
                 li.classList.add("selected");
-                selectedUserId = user.id;
+                switchChat(user.id, displayName);
+                closeSidebar();
             };
 
-            // Double-click to call
             li.ondblclick = () => {
                 if (user.isInCall || user.isDoNotDisturb) {
                     showNotification("User is busy or unavailable", "warning");
@@ -120,7 +186,6 @@ hub.on("UserListUpdated", (users) => {
                 initiateCall(user.id, displayName);
             };
 
-            // Right-click context menu
             li.addEventListener("contextmenu", (e) => {
                 e.preventDefault();
                 showContextMenu(e, user.id, displayName, user.isInCall, user.isDoNotDisturb);
@@ -129,38 +194,92 @@ hub.on("UserListUpdated", (users) => {
 
         userListEl.appendChild(li);
     });
-});
+}
 
 // ═══════════════════════════════════════════════════════
-//  3. CONTEXT MENU
+//  3. PER-USER CHAT HISTORY
+// ═══════════════════════════════════════════════════════
+
+function switchChat(userId, userName) {
+    selectedUserId = userId;
+    selectedUserName = userName;
+    chatTargetName.textContent = userName;
+    messageInput.placeholder = `Message ${userName}...`;
+
+    const history = chatHistories.get(userId);
+    if (history) history.forEach(m => m.unread = false);
+
+    renderChat(userId);
+    refreshUnreadBadges();
+}
+
+function renderChat(userId) {
+    chatMessages.innerHTML = "";
+    const history = chatHistories.get(userId) || [];
+
+    history.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = msg.isMine ? "msg msg-sent" : "msg msg-received";
+        div.innerHTML = `<strong>${msg.sender}</strong> <small>${msg.timestamp}</small><br>${escapeHtml(msg.message)}`;
+        chatMessages.appendChild(div);
+    });
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function addMessageToHistory(peerId, sender, message, timestamp, isMine) {
+    if (!chatHistories.has(peerId)) {
+        chatHistories.set(peerId, []);
+    }
+    chatHistories.get(peerId).push({
+        sender, message, timestamp, isMine,
+        unread: !isMine && peerId !== selectedUserId
+    });
+}
+
+function refreshUnreadBadges() {
+    document.querySelectorAll("#activeUsersList li").forEach(li => {
+        const uid = li.dataset.id;
+        if (!uid || uid === myId) return;
+        const history = chatHistories.get(uid);
+        const unread = history ? history.filter(m => m.unread).length : 0;
+        const existing = li.querySelector(".unread-badge");
+        if (existing) existing.remove();
+        if (unread > 0) {
+            const badge = document.createElement("span");
+            badge.className = "unread-badge";
+            badge.textContent = unread;
+            li.querySelector(".user-name").after(badge);
+        }
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+//  4. CONTEXT MENU
 // ═══════════════════════════════════════════════════════
 
 function showContextMenu(event, userId, userName, userInCall, isDnd) {
-    // Remove any existing menu
     document.querySelectorAll(".context-menu").forEach(m => m.remove());
 
     const menu = document.createElement("div");
     menu.className = "context-menu";
-    menu.style.left = event.clientX + "px";
-    menu.style.top = event.clientY + "px";
+    menu.style.left = Math.min(event.clientX, window.innerWidth - 180) + "px";
+    menu.style.top = Math.min(event.clientY, window.innerHeight - 120) + "px";
 
-    // Call option
     const callOption = document.createElement("div");
     callOption.className = "context-menu-item";
     callOption.innerHTML = "📞 Call";
     if (userInCall || isDnd || isInCall) {
         callOption.classList.add("disabled");
-        callOption.title = userInCall ? "User is busy" : isDnd ? "User has DND on" : "You are in a call";
     } else {
         callOption.onclick = () => { initiateCall(userId, userName); menu.remove(); };
     }
 
-    // Message option
     const msgOption = document.createElement("div");
     msgOption.className = "context-menu-item";
     msgOption.innerHTML = "💬 Message";
     msgOption.onclick = () => {
-        selectedUserId = userId;
+        switchChat(userId, userName);
         document.querySelectorAll("#activeUsersList li").forEach(x => x.classList.remove("selected"));
         const targetLi = document.querySelector(`#activeUsersList li[data-id="${userId}"]`);
         if (targetLi) targetLi.classList.add("selected");
@@ -172,7 +291,6 @@ function showContextMenu(event, userId, userName, userInCall, isDnd) {
     menu.appendChild(msgOption);
     document.body.appendChild(menu);
 
-    // Close menu on any click
     setTimeout(() => {
         document.addEventListener("click", function closeMenu() {
             menu.remove();
@@ -182,7 +300,7 @@ function showContextMenu(event, userId, userName, userInCall, isDnd) {
 }
 
 // ═══════════════════════════════════════════════════════
-//  4. CALLING — Outgoing
+//  5. CALLING — Outgoing
 // ═══════════════════════════════════════════════════════
 
 async function initiateCall(userId, userName) {
@@ -197,7 +315,6 @@ async function initiateCall(userId, userName) {
     try {
         await startLocalStream(true, true);
         showNotification(`Calling ${userName}...`, "info");
-
         createPeerConnection();
 
         const offer = await peerConnection.createOffer({
@@ -206,7 +323,6 @@ async function initiateCall(userId, userName) {
         });
         await peerConnection.setLocalDescription(offer);
 
-        // Send offer as plain object (SignalR serializes it)
         await hub.invoke("SendOffer", userId,
             { type: offer.type, sdp: offer.sdp },
             localHasVideo, localHasAudio
@@ -219,11 +335,11 @@ async function initiateCall(userId, userName) {
 }
 
 // ═══════════════════════════════════════════════════════
-//  5. CALLING — Incoming
+//  6. CALLING — Incoming
 // ═══════════════════════════════════════════════════════
 
 hub.on("IncomingCall", (callerId, callerName, offer, hasVideo, hasAudio) => {
-    console.log("📞 Incoming call from:", callerName);
+    console.log("Incoming call from:", callerName);
 
     if (isInCall) {
         hub.invoke("RejectCall", callerId, "User is busy");
@@ -232,7 +348,6 @@ hub.on("IncomingCall", (callerId, callerName, offer, hasVideo, hasAudio) => {
 
     currentPeerId = callerId;
 
-    // Build media info string
     const mediaInfo = [];
     if (hasVideo) mediaInfo.push("📹 Video");
     if (hasAudio) mediaInfo.push("🎤 Audio");
@@ -241,16 +356,13 @@ hub.on("IncomingCall", (callerId, callerName, offer, hasVideo, hasAudio) => {
     document.getElementById("callMediaInfo").textContent = mediaInfo.join(" + ") || "Call";
     document.getElementById("incomingCallPopup").classList.add("show");
 
-    // Accept handler
     document.getElementById("acceptCallPopup").onclick = async () => {
         document.getElementById("incomingCallPopup").classList.remove("show");
         try {
             await startLocalStream(true, true);
             createPeerConnection();
 
-            // Set remote description from offer
-            const offerDesc = new RTCSessionDescription(offer);
-            await peerConnection.setRemoteDescription(offerDesc);
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
             for (const candidate of pendingIceCandidates) {
                 await peerConnection.addIceCandidate(candidate);
             }
@@ -275,7 +387,6 @@ hub.on("IncomingCall", (callerId, callerName, offer, hasVideo, hasAudio) => {
         }
     };
 
-    // Reject handler
     document.getElementById("rejectCallPopup").onclick = async () => {
         document.getElementById("incomingCallPopup").classList.remove("show");
         await hub.invoke("RejectCall", callerId, "Call declined");
@@ -284,11 +395,10 @@ hub.on("IncomingCall", (callerId, callerName, offer, hasVideo, hasAudio) => {
 });
 
 // ═══════════════════════════════════════════════════════
-//  6. SIGNALING — Answer, ICE, Call State
+//  7. SIGNALING — Answer, ICE, Call State
 // ═══════════════════════════════════════════════════════
 
 hub.on("CallAccepted", (calleeId) => {
-    console.log("✅ Call accepted by:", calleeId);
     isInCall = true;
     showCallControls();
     showNotification("Call accepted!", "success");
@@ -297,37 +407,21 @@ hub.on("CallAccepted", (calleeId) => {
 hub.on("ReceiveAnswer", async (answer, hasVideo, hasAudio) => {
     if (!peerConnection) return;
     try {
-        const answerDesc = new RTCSessionDescription(answer);
-        await peerConnection.setRemoteDescription(answerDesc);
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
         for (const candidate of pendingIceCandidates) {
             await peerConnection.addIceCandidate(candidate);
         }
         pendingIceCandidates = [];
-        console.log("Remote answer set successfully");
     } catch (err) {
         console.error("Failed to set remote answer:", err);
     }
 });
 
-//hub.on("ReceiveIceCandidate", async (senderId, candidate) => {
-//    if (!peerConnection) return;
-//    try {
-//        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-//    } catch (err) {
-//        console.error("Failed to add ICE candidate:", err);
-//    }
-//});
-
 hub.on("ReceiveIceCandidate", async (senderId, candidate) => {
-
     if (!peerConnection) return;
-
     const iceCandidate = new RTCIceCandidate(candidate);
 
-    // Remote description not ready yet
-    if (!peerConnection.remoteDescription ||
-        !peerConnection.remoteDescription.type) {
-
+    if (!peerConnection.remoteDescription || !peerConnection.remoteDescription.type) {
         pendingIceCandidates.push(iceCandidate);
         return;
     }
@@ -349,32 +443,35 @@ hub.on("CallEnded", () => {
     cleanupCall();
 });
 
-// Peer media toggles
 hub.on("PeerVideoToggled", (enabled) => {
-    const remoteStream = remoteVideo.srcObject;
-    if (remoteStream) {
-        remoteStream.getVideoTracks().forEach(t => t.enabled = enabled);
-    }
+    const s = remoteVideo.srcObject;
+    if (s) s.getVideoTracks().forEach(t => t.enabled = enabled);
     showNotification(enabled ? "Peer turned on video" : "Peer turned off video", "info");
 });
 
 hub.on("PeerAudioToggled", (enabled) => {
-    const remoteStream = remoteVideo.srcObject;
-    if (remoteStream) {
-        remoteStream.getAudioTracks().forEach(t => t.enabled = enabled);
-    }
+    const s = remoteVideo.srcObject;
+    if (s) s.getAudioTracks().forEach(t => t.enabled = enabled);
     showNotification(enabled ? "Peer unmuted" : "Peer muted", "info");
 });
 
 // ═══════════════════════════════════════════════════════
-//  7. WEBRTC — Media & PeerConnection
+//  8. WEBRTC — Media & PeerConnection
 // ═══════════════════════════════════════════════════════
 
 async function startLocalStream(requestVideo, requestAudio) {
     try {
         localStream = await navigator.mediaDevices.getUserMedia({
-            video: requestVideo ? { width: { ideal: 1280 }, height: { ideal: 720 } } : false,
-            audio: requestAudio
+            video: requestVideo ? {
+                width: { ideal: 640, max: 1280 },
+                height: { ideal: 480, max: 720 },
+                facingMode: "user"
+            } : false,
+            audio: requestAudio ? {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true
+            } : false
         });
         localVideo.srcObject = localStream;
         localHasVideo = requestVideo && localStream.getVideoTracks().length > 0;
@@ -383,108 +480,76 @@ async function startLocalStream(requestVideo, requestAudio) {
         console.warn("Media access failed:", err);
         localHasVideo = false;
         localHasAudio = false;
-        showNotification("Camera/Mic access denied. Audio-only mode.", "warning");
+        showNotification("Camera/Mic access denied.", "warning");
     }
 }
 
 function createPeerConnection() {
-
-    if (peerConnection) {
-        peerConnection.close();
-    }
-
+    if (peerConnection) peerConnection.close();
     peerConnection = new RTCPeerConnection(ICE_CONFIG);
 
-    // LOCAL TRACKS
     if (localStream) {
-        localStream.getTracks().forEach(track => {
-            peerConnection.addTrack(track, localStream);
-        });
+        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
     }
 
-    // REMOTE STREAM
     const remoteStream = new MediaStream();
     remoteVideo.srcObject = remoteStream;
 
     peerConnection.ontrack = (event) => {
-
-        console.log("Received remote track:", event.track.kind);
-
+        console.log("Remote track:", event.track.kind);
         remoteStream.addTrack(event.track);
     };
 
-    // ICE
     peerConnection.onicecandidate = (event) => {
-
         if (event.candidate && currentPeerId) {
-
-            hub.invoke(
-                "SendIceCandidate",
-                currentPeerId,
-                event.candidate.toJSON()
-            ).catch(console.error);
+            hub.invoke("SendIceCandidate", currentPeerId, event.candidate.toJSON()).catch(console.error);
         }
     };
 
     peerConnection.onconnectionstatechange = () => {
-
-        console.log(
-            "Connection State:",
-            peerConnection.connectionState
-        );
+        console.log("Connection:", peerConnection.connectionState);
+        if (peerConnection.connectionState === "failed") {
+            showNotification("Connection failed — check network", "error");
+        }
     };
 
     peerConnection.oniceconnectionstatechange = () => {
-
-        console.log(
-            "ICE State:",
-            peerConnection.iceConnectionState
-        );
+        console.log("ICE:", peerConnection.iceConnectionState);
+        if (peerConnection.iceConnectionState === "disconnected") {
+            showNotification("Connection unstable...", "warning");
+        }
     };
 }
 
 // ═══════════════════════════════════════════════════════
-//  8. CALL CONTROLS
+//  9. CALL CONTROLS
 // ═══════════════════════════════════════════════════════
 
-// End call
 endCallBtn.onclick = () => {
-    if (currentPeerId) {
-        hub.invoke("EndCall", currentPeerId).catch(console.error);
-    }
+    if (currentPeerId) hub.invoke("EndCall", currentPeerId).catch(console.error);
     cleanupCall();
 };
 
-// Toggle video
 toggleVideoBtn.onclick = () => {
     if (!localStream) return;
-    const videoTrack = localStream.getVideoTracks()[0];
-    if (!videoTrack) return;
-
-    videoTrack.enabled = !videoTrack.enabled;
-    localHasVideo = videoTrack.enabled;
-    toggleVideoBtn.textContent = videoTrack.enabled ? "📹 Video On" : "📹 Video Off";
-    toggleVideoBtn.classList.toggle("toggled-off", !videoTrack.enabled);
-
-    if (currentPeerId) {
-        hub.invoke("ToggleVideo", currentPeerId, videoTrack.enabled).catch(console.error);
-    }
+    const t = localStream.getVideoTracks()[0];
+    if (!t) return;
+    t.enabled = !t.enabled;
+    localHasVideo = t.enabled;
+    toggleVideoBtn.textContent = t.enabled ? "📹 On" : "📹 Off";
+    toggleVideoBtn.classList.toggle("toggled-off", !t.enabled);
+    if (currentPeerId) hub.invoke("ToggleVideo", currentPeerId, t.enabled).catch(console.error);
 };
 
-// Toggle audio
 toggleAudioBtn.onclick = () => {
     if (!localStream) return;
-    const audioTrack = localStream.getAudioTracks()[0];
-    if (!audioTrack) return;
-
-    audioTrack.enabled = !audioTrack.enabled;
-    localHasAudio = audioTrack.enabled;
-    toggleAudioBtn.textContent = audioTrack.enabled ? "🎤 Mic On" : "🎤 Mic Off";
-    toggleAudioBtn.classList.toggle("toggled-off", !audioTrack.enabled);
-
-    if (currentPeerId) {
-        hub.invoke("ToggleAudio", currentPeerId, audioTrack.enabled).catch(console.error);
-    }
+    const t = localStream.getAudioTracks()[0];
+    if (!t) return;
+    t.enabled = !t.enabled;
+    localHasAudio = t.enabled;
+    toggleAudioBtn.textContent = t.enabled ? "🎤 On" : "🎤 Off";
+    toggleAudioBtn.classList.toggle("toggled-off", !t.enabled);
+    if (currentPeerId) hub.invoke("ToggleAudio", currentPeerId, t.enabled).catch(console.error);
 };
 
 function showCallControls() {
@@ -492,8 +557,8 @@ function showCallControls() {
     endCallBtn.classList.add("active");
     toggleVideoBtn.classList.add("active");
     toggleAudioBtn.classList.add("active");
-    toggleVideoBtn.textContent = "📹 Video On";
-    toggleAudioBtn.textContent = "🎤 Mic On";
+    toggleVideoBtn.textContent = "📹 On";
+    toggleAudioBtn.textContent = "🎤 On";
 }
 
 function hideCallControls() {
@@ -504,18 +569,12 @@ function hideCallControls() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  9. CLEANUP
+//  10. CLEANUP
 // ═══════════════════════════════════════════════════════
 
 function cleanupCall() {
-    if (peerConnection) {
-        peerConnection.close();
-        peerConnection = null;
-    }
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-        localStream = null;
-    }
+    if (peerConnection) { peerConnection.close(); peerConnection = null; }
+    if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
     localVideo.srcObject = null;
     remoteVideo.srcObject = null;
     currentPeerId = null;
@@ -526,73 +585,77 @@ function cleanupCall() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  10. PRIVATE CHAT
+//  11. PRIVATE CHAT (with per-user history)
 // ═══════════════════════════════════════════════════════
 
 document.getElementById("sendmessage").onclick = sendMessage;
-messageInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") sendMessage();
-});
+messageInput.addEventListener("keydown", (e) => { if (e.key === "Enter") sendMessage(); });
 
 function sendMessage() {
     const msg = messageInput.value.trim();
     if (!msg) return;
-    if (!selectedUserId) {
-        showNotification("Select a user first!", "warning");
-        return;
-    }
+    if (!selectedUserId) { showNotification("Select a user first!", "warning"); return; }
     hub.invoke("SendPrivateMessage", selectedUserId, msg);
     messageInput.value = "";
 }
 
 hub.on("ReceivePrivateMessage", (sender, message, timestamp, peerId) => {
-    const div = document.createElement("div");
-    div.className = sender === "You" ? "msg msg-sent" : "msg msg-received";
-    div.innerHTML = `<strong>${sender}</strong> <small>${timestamp}</small><br>${escapeHtml(message)}`;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    const isMine = sender === "You";
+    addMessageToHistory(peerId, sender, message, timestamp, isMine);
+
+    if (peerId === selectedUserId) {
+        const div = document.createElement("div");
+        div.className = isMine ? "msg msg-sent" : "msg msg-received";
+        div.innerHTML = `<strong>${sender}</strong> <small>${timestamp}</small><br>${escapeHtml(message)}`;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        const h = chatHistories.get(peerId);
+        if (h) h.forEach(m => m.unread = false);
+    }
+
+    refreshUnreadBadges();
 });
 
 // ═══════════════════════════════════════════════════════
-//  11. UTILITIES
+//  12. UTILITIES
 // ═══════════════════════════════════════════════════════
 
 function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
+    const d = document.createElement("div");
+    d.textContent = text;
+    return d.innerHTML;
 }
 
 function showNotification(message, type = "info") {
-    const notification = document.createElement("div");
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    requestAnimationFrame(() => notification.classList.add("show"));
+    const n = document.createElement("div");
+    n.className = `notification notification-${type}`;
+    n.textContent = message;
+    document.body.appendChild(n);
+    requestAnimationFrame(() => n.classList.add("show"));
     setTimeout(() => {
-        notification.classList.remove("show");
-        setTimeout(() => notification.remove(), 300);
+        n.classList.remove("show");
+        setTimeout(() => n.remove(), 300);
     }, 3000);
 }
 
 // ═══════════════════════════════════════════════════════
-//  12. RECONNECTION HANDLING
+//  13. RECONNECTION
 // ═══════════════════════════════════════════════════════
 
 hub.onreconnected(async (connectionId) => {
-    console.log("Reconnected with ID:", connectionId);
+    console.log("Reconnected:", connectionId);
     myId = connectionId;
     if (myName) {
         await hub.invoke("Register", myName);
+        if (latestUserList.length > 0) renderUserList(latestUserList);
     }
-    // If was in a call, it's gone now
     cleanupCall();
     showNotification("Reconnected!", "success");
 });
 
 hub.onclose(() => {
-    console.log("Hub connection closed");
+    console.log("Hub closed");
     cleanupCall();
-    showNotification("Connection lost. Attempting to reconnect...", "error");
+    showNotification("Connection lost. Reconnecting...", "error");
 });

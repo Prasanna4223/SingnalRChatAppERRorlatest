@@ -1,22 +1,41 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
-
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html { font-size: 16px; }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 0; /* Footer is flex-pinned, no margin hack needed */
+}
+
+/* Kill bootstrap .container max-width when wrapping our app */
+.app-body .container,
+.app-body > .app-container {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Navbar dark theme */
+header .navbar {
+    background: #16213e !important;
+    border-bottom: 1px solid #0f3460 !important;
+    margin-bottom: 0 !important;
+}
+header .navbar-brand,
+header .nav-link {
+    color: #e0e0e0 !important;
+}
+header .nav-link:hover {
+    color: #e94560 !important;
 }

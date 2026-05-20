@@ -1,25 +1,25 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\",
+  "WorkspaceRootPath": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|c:\\users\\prasannab\\desktop\\signalr application\\singnalrchatapperrorlatest\\wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|d:\\softwares\\prasanna\\new folder\\singnalrchatapperrorlatest\\wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|solutionrelative:wwwroot\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|c:\\users\\prasannab\\desktop\\signalr application\\singnalrchatapperrorlatest\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|c:\\users\\prasannab\\desktop\\signalr application\\singnalrchatapperrorlatest\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|c:\\users\\prasannab\\desktop\\signalr application\\singnalrchatapperrorlatest\\wwwroot\\js\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|d:\\softwares\\prasanna\\new folder\\singnalrchatapperrorlatest\\wwwroot\\js\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|solutionrelative:wwwroot\\js\\app.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|c:\\users\\prasannab\\desktop\\signalr application\\singnalrchatapperrorlatest\\callhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|d:\\softwares\\prasanna\\new folder\\singnalrchatapperrorlatest\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|d:\\softwares\\prasanna\\new folder\\singnalrchatapperrorlatest\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|d:\\softwares\\prasanna\\new folder\\singnalrchatapperrorlatest\\callhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C7ABE024-11EB-4CB6-88F8-F2BA8847E0A0}|SignalRChatApplication.csproj|solutionrelative:callhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -30,69 +30,82 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CallHub.cs",
+              "DocumentMoniker": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\CallHub.cs",
+              "RelativeDocumentMoniker": "CallHub.cs",
+              "ToolTip": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\CallHub.cs",
+              "RelativeToolTip": "CallHub.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAiwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-19T06:46:18.826Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "style.css",
-              "DocumentMoniker": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\wwwroot\\css\\style.css",
+              "DocumentMoniker": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\wwwroot\\css\\style.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\style.css",
-              "ToolTip": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\wwwroot\\css\\style.css",
+              "ToolTip": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\wwwroot\\css\\style.css",
               "RelativeToolTip": "wwwroot\\css\\style.css",
-              "ViewState": "AgIAANIAAAAAAAAAAAAYwOsAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAGQDAAAAAAAAAAAQwHwDAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-05-19T16:11:17.429Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\Views\\Shared\\_Layout.cshtml",
+              "DocumentMoniker": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAACoAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwB0AAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-19T16:04:13.358Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-19T16:04:13.358Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "app.js",
-              "DocumentMoniker": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\wwwroot\\js\\app.js",
+              "DocumentMoniker": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\wwwroot\\js\\app.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\app.js",
-              "ToolTip": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\wwwroot\\js\\app.js",
+              "ToolTip": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\wwwroot\\js\\app.js",
               "RelativeToolTip": "wwwroot\\js\\app.js",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACMAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAGkCAAAAAAAAAAAYwI4CAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-05-19T15:51:25.922Z"
+              "WhenOpened": "2026-05-19T15:51:25.922Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\Views\\Home\\Index.cshtml",
+              "DocumentMoniker": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\Views\\Home\\Index.cshtml",
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAADMAAAAAAAAAAAAYwE4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAEwAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-05-19T06:46:18.824Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "CallHub.cs",
-              "DocumentMoniker": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\CallHub.cs",
-              "RelativeDocumentMoniker": "CallHub.cs",
-              "ToolTip": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\CallHub.cs",
-              "RelativeToolTip": "CallHub.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAiwCQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-19T06:46:18.826Z"
             }
           ]
         }

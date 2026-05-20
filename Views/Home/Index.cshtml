@@ -2,77 +2,83 @@
     ViewData["Title"] = "Chat & Video Call";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-</head>
-<body>
-    <!-- Username Entry Popup -->
-    <div class="username-popup" id="usernamePopup">
-        <h2>🎉 Welcome!</h2>
-        <p>Enter your name to get started</p>
-        <input type="text" id="displayname" placeholder="Your name" autofocus />
-        <br><br>
-        <button id="joinBtn">Join Now</button>
-    </div>
+@* Defensive: load style.css and signalR here too, so it works
+   even if _Layout.cshtml wasn't replaced. Browser deduplicates. *@
+<link rel="stylesheet" href="~/css/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 
-    <!-- Incoming Call Popup -->
-    <div class="incoming-call-popup" id="incomingCallPopup">
-        <h2>📞 Incoming Call</h2>
-        <div class="caller-name" id="callerName"></div>
-        <div class="call-info" id="callMediaInfo"></div>
-        <div class="popup-buttons">
-            <button class="accept-btn" id="acceptCallPopup">✅ Accept</button>
-            <button class="reject-btn" id="rejectCallPopup">❌ Decline</button>
+<!-- Username Entry Popup -->
+<div class="username-popup" id="usernamePopup">
+    <h2>🎉 Welcome!</h2>
+    <p>Enter your name to get started</p>
+    <input type="text" id="displayname" placeholder="Your name" autofocus />
+    <br /><br />
+    <button id="joinBtn">Join Now</button>
+</div>
+
+<!-- Incoming Call Popup -->
+<div class="incoming-call-popup" id="incomingCallPopup">
+    <h2>📞 Incoming Call</h2>
+    <div class="caller-name" id="callerName"></div>
+    <div class="call-info" id="callMediaInfo"></div>
+    <div class="popup-buttons">
+        <button class="accept-btn" id="acceptCallPopup">✅ Accept</button>
+        <button class="reject-btn" id="rejectCallPopup">❌ Decline</button>
+    </div>
+</div>
+
+<!-- Main Application -->
+<div class="app-container">
+    <!-- Sidebar Overlay (mobile backdrop) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>👥 Users</h3>
+            <button class="sidebar-close" id="sidebarClose">✕</button>
         </div>
-    </div>
+        <ul id="activeUsersList"></ul>
+    </aside>
 
-    <!-- Main Application -->
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <h3>👥 Active Users</h3>
-            <ul id="activeUsersList"></ul>
-        </aside>
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Top Bar (mobile: hamburger + chat target name) -->
+        <div class="top-bar">
+            <button class="hamburger" id="hamburgerBtn">☰</button>
+            <span class="chat-target-name" id="chatTargetName">Select a user</span>
+        </div>
 
-        <!-- Main Content -->
-        <main class="main">
-            <!-- Call Controls -->
-            <div class="call-controls">
-                <button id="endCall">📞 End Call</button>
-                <button id="toggleVideo">📹 Video On</button>
-                <button id="toggleAudio">🎤 Mic On</button>
+        <!-- Call Controls -->
+        <div class="call-controls">
+            <button id="endCall">📞 End</button>
+            <button id="toggleVideo">📹 Video</button>
+            <button id="toggleAudio">🎤 Mic</button>
+        </div>
+
+        <!-- Video Streams (hidden by default) -->
+        <div class="video-container" id="videoContainer" style="display: none;">
+            <div class="video-box">
+                <video id="localVideo" autoplay muted playsinline></video>
+                <span class="video-label">You</span>
             </div>
-
-            <!-- Video Streams (hidden by default, shown during call) -->
-            <div class="video-container" style="display: none;">
-                <div class="video-box">
-                    <video id="localVideo" autoplay muted playsinline></video>
-                    <span class="video-label">You</span>
-                </div>
-                <div class="video-box">
-                    <video id="remoteVideo" autoplay playsinline></video>
-                    <span class="video-label">Remote</span>
-                </div>
+            <div class="video-box">
+                <video id="remoteVideo" autoplay playsinline></video>
+                <span class="video-label">Remote</span>
             </div>
+        </div>
 
-            <!-- Chat -->
-            <div class="chat-container">
-                <h3>💬 Messages</h3>
-                <div id="chatMessages"></div>
-                <div class="message-input-container">
-                    <input type="text" id="message" placeholder="Select a user, then type a message..." />
-                    <button id="sendmessage">Send</button>
-                </div>
+        <!-- Chat -->
+        <div class="chat-container">
+            <div id="chatMessages"></div>
+            <div class="message-input-container">
+                <input type="text" id="message" placeholder="Select a user, then type..." />
+                <button id="sendmessage">Send</button>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
 
+@section Scripts {
     <script src="~/js/app.js"></script>
-</body>
-</html>
+}
