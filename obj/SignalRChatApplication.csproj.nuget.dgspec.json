@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj": {}
+    "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj": {}
   },
   "projects": {
-    "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj": {
+    "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
+        "projectUniqueName": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
         "projectName": "SignalRChatApplication",
-        "projectPath": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
-        "packagesPath": "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\",
-        "outputPath": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\obj\\",
+        "projectPath": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
+        "packagesPath": "C:\\Users\\PrasannaB\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\R&D-Prasanna\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PrasannaB\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,7 +46,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -76,7 +77,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

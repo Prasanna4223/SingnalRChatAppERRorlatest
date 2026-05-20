@@ -1,16 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "AEUEAFWilp8=",
+  "dgSpecHash": "s9I/KaQwqpU=",
   "success": true,
-  "projectFilePath": "D:\\softwares\\PRASANNA\\New folder\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
+  "projectFilePath": "C:\\Users\\PrasannaB\\Desktop\\Signalr Application\\SingnalRChatAppERRorlatest\\SignalRChatApplication.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\8.0.7\\microsoft.aspnetcore.connections.abstractions.8.0.7.nupkg.sha512",
-    "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.aspnetcore.signalr.common\\8.0.7\\microsoft.aspnetcore.signalr.common.8.0.7.nupkg.sha512",
-    "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.extensions.features\\8.0.7\\microsoft.extensions.features.8.0.7.nupkg.sha512",
-    "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
-    "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
-    "C:\\Users\\R&D-Prasanna\\.nuget\\packages\\system.io.pipelines\\8.0.0\\system.io.pipelines.8.0.0.nupkg.sha512"
+    "C:\\Users\\PrasannaB\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\8.0.7\\microsoft.aspnetcore.connections.abstractions.8.0.7.nupkg.sha512",
+    "C:\\Users\\PrasannaB\\.nuget\\packages\\microsoft.aspnetcore.signalr.common\\8.0.7\\microsoft.aspnetcore.signalr.common.8.0.7.nupkg.sha512",
+    "C:\\Users\\PrasannaB\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\PrasannaB\\.nuget\\packages\\microsoft.extensions.features\\8.0.7\\microsoft.extensions.features.8.0.7.nupkg.sha512",
+    "C:\\Users\\PrasannaB\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
+    "C:\\Users\\PrasannaB\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\PrasannaB\\.nuget\\packages\\system.io.pipelines\\8.0.0\\system.io.pipelines.8.0.0.nupkg.sha512"
   ],
   "logs": []
 }

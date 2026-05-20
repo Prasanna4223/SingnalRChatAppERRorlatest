@@ -15,18 +15,20 @@ body {
 /* ═══ LAYOUT ═══ */
 .container {
     display: flex;
-    height: 100vh;
+    height: calc(100vh - 70px);
+    overflow: hidden;
 }
-
 /* ═══ SIDEBAR ═══ */
 .sidebar {
     width: 240px;
+    min-width: 240px;
+    max-width: 240px;
     background: #16213e;
     padding: 20px 15px;
-    overflow-y: auto;
     border-right: 1px solid #0f3460;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .sidebar h3 {
@@ -116,8 +118,9 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 15px;
     overflow: hidden;
+    min-width: 0;
 }
 
 /* ═══ CALL CONTROLS ═══ */
@@ -168,8 +171,11 @@ body {
     display: flex;
     gap: 15px;
     justify-content: center;
-    margin-bottom: 15px;
     flex-wrap: wrap;
+    max-height: 260px;
+    min-height: 260px;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .video-box {
@@ -204,9 +210,9 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     min-height: 0;
 }
-
 .chat-container h3 {
     margin-bottom: 10px;
     color: #e94560;
@@ -220,8 +226,13 @@ body {
     border-radius: 10px;
     padding: 12px;
     margin-bottom: 10px;
-    min-height: 100px;
     border: 1px solid #0f3460;
+    min-height: 150px;
+    max-height: 100%;
+}
+
+.message-input-container {
+    flex-shrink: 0;
 }
 
 .msg {
@@ -419,6 +430,12 @@ body {
     border-bottom: 1px solid #0f3460;
     color: #e0e0e0;
     font-size: 0.9em;
+}
+
+#activeUsersList {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .context-menu-item:last-child { border-bottom: none; }

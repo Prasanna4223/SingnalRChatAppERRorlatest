@@ -12,7 +12,7 @@ let localStream = null;
 let localHasVideo = false;
 let localHasAudio = false;
 let isInCall = false;
-
+let pendingIceCandidates = [];
 // ─── SignalR Hub ───
 const hub = new signalR.HubConnectionBuilder()
     .withUrl("/callHub")
@@ -28,6 +28,12 @@ const userListEl = document.getElementById("activeUsersList");
 const endCallBtn = document.getElementById("endCall");
 const toggleVideoBtn = document.getElementById("toggleVideo");
 const toggleAudioBtn = document.getElementById("toggleAudio");
+remoteVideo.autoplay = true;
+remoteVideo.playsInline = true;
+
+localVideo.autoplay = true;
+localVideo.playsInline = true;
+localVideo.muted = true;
 
 // ─── ICE Configuration ───
 const ICE_CONFIG = {
@@ -245,6 +251,10 @@ hub.on("IncomingCall", (callerId, callerName, offer, hasVideo, hasAudio) => {
             // Set remote description from offer
             const offerDesc = new RTCSessionDescription(offer);
             await peerConnection.setRemoteDescription(offerDesc);
+            for (const candidate of pendingIceCandidates) {
+                await peerConnection.addIceCandidate(candidate);
+            }
+            pendingIceCandidates = [];
 
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
@@ -289,16 +299,41 @@ hub.on("ReceiveAnswer", async (answer, hasVideo, hasAudio) => {
     try {
         const answerDesc = new RTCSessionDescription(answer);
         await peerConnection.setRemoteDescription(answerDesc);
+        for (const candidate of pendingIceCandidates) {
+            await peerConnection.addIceCandidate(candidate);
+        }
+        pendingIceCandidates = [];
         console.log("Remote answer set successfully");
     } catch (err) {
         console.error("Failed to set remote answer:", err);
     }
 });
 
+//hub.on("ReceiveIceCandidate", async (senderId, candidate) => {
+//    if (!peerConnection) return;
+//    try {
+//        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+//    } catch (err) {
+//        console.error("Failed to add ICE candidate:", err);
+//    }
+//});
+
 hub.on("ReceiveIceCandidate", async (senderId, candidate) => {
+
     if (!peerConnection) return;
+
+    const iceCandidate = new RTCIceCandidate(candidate);
+
+    // Remote description not ready yet
+    if (!peerConnection.remoteDescription ||
+        !peerConnection.remoteDescription.type) {
+
+        pendingIceCandidates.push(iceCandidate);
+        return;
+    }
+
     try {
-        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        await peerConnection.addIceCandidate(iceCandidate);
     } catch (err) {
         console.error("Failed to add ICE candidate:", err);
     }
@@ -353,47 +388,58 @@ async function startLocalStream(requestVideo, requestAudio) {
 }
 
 function createPeerConnection() {
+
     if (peerConnection) {
         peerConnection.close();
-        peerConnection = null;
     }
 
     peerConnection = new RTCPeerConnection(ICE_CONFIG);
 
-    // Add local tracks
+    // LOCAL TRACKS
     if (localStream) {
         localStream.getTracks().forEach(track => {
             peerConnection.addTrack(track, localStream);
         });
     }
 
-    // Receive remote tracks
+    // REMOTE STREAM
+    const remoteStream = new MediaStream();
+    remoteVideo.srcObject = remoteStream;
+
     peerConnection.ontrack = (event) => {
-        console.log("Remote track received:", event.track.kind);
-        if (remoteVideo.srcObject !== event.streams[0]) {
-            remoteVideo.srcObject = event.streams[0];
-        }
+
+        console.log("Received remote track:", event.track.kind);
+
+        remoteStream.addTrack(event.track);
     };
 
-    // Send ICE candidates to peer
+    // ICE
     peerConnection.onicecandidate = (event) => {
+
         if (event.candidate && currentPeerId) {
-            hub.invoke("SendIceCandidate", currentPeerId, event.candidate.toJSON())
-                .catch(err => console.error("ICE send failed:", err));
+
+            hub.invoke(
+                "SendIceCandidate",
+                currentPeerId,
+                event.candidate.toJSON()
+            ).catch(console.error);
         }
     };
 
-    // Monitor connection state
     peerConnection.onconnectionstatechange = () => {
-        const state = peerConnection?.connectionState;
-        console.log("WebRTC state:", state);
-        if (state === "failed" || state === "disconnected") {
-            showNotification("Connection lost", "warning");
-        }
+
+        console.log(
+            "Connection State:",
+            peerConnection.connectionState
+        );
     };
 
     peerConnection.oniceconnectionstatechange = () => {
-        console.log("ICE state:", peerConnection?.iceConnectionState);
+
+        console.log(
+            "ICE State:",
+            peerConnection.iceConnectionState
+        );
     };
 }
 
